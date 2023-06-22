@@ -1,1 +1,1 @@
-# This is a Sliding Puzzle 15 App
+# Sliding Puzzle 15 App
