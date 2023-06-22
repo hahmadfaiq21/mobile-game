@@ -6,4 +6,6 @@ A sliding puzzle, sliding block puzzle, or sliding tile puzzle is a combination 
 
 
 # How To Solve a 4x4 Sliding Puzzle by Steven Burrell
+
+In this video, you will learn how to solve the puzzle.
 https://www.youtube.com/watch?v=NXRIrP1k4dE
