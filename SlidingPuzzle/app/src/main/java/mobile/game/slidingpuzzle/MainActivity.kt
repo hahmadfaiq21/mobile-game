@@ -17,7 +17,6 @@ class MainActivity : AppCompatActivity() {
 
     private val startGameLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
-            // Handle the result here
             loadData()
             loadMode()
         }
