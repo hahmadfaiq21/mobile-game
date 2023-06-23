@@ -5,11 +5,11 @@ A sliding puzzle, sliding block puzzle, or sliding tile puzzle is a combination 
 ![Process](https://github.com/hahmadfaiq21/mobile-game/assets/74751720/bb570398-5f12-40fd-9b5a-7f837eb56988)
 
 
-# How To Solve a 4x4 Sliding Puzzle by Steven Burrell
+# How To Solve The Puzzle
 
 If you want to solve the puzzle, you can learn from this video.
-
 https://www.youtube.com/watch?v=NXRIrP1k4dE
+How To Solve a 4x4 Sliding Puzzle by Steven Burrell | YouTube
 
 # User Interface of Sliding Puzzle 15
 
