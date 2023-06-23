@@ -10,3 +10,7 @@ A sliding puzzle, sliding block puzzle, or sliding tile puzzle is a combination 
 In this video, you will learn how to solve the puzzle.
 
 https://www.youtube.com/watch?v=NXRIrP1k4dE
+
+# User Interface of Sliding Puzzle 15
+
+![UI](https://github.com/hahmadfaiq21/mobile-game/assets/74751720/73868a6e-61a8-43bb-a287-9ae7b1531d45)
