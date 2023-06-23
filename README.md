@@ -5,7 +5,7 @@ A sliding puzzle, sliding block puzzle, or sliding tile puzzle is a combination 
 ![Process](https://github.com/hahmadfaiq21/mobile-game/assets/74751720/bb570398-5f12-40fd-9b5a-7f837eb56988)
 
 
-# The User Interface of Sliding Puzzle 15
+# User Interface of Sliding Puzzle 15
 
 ![UI](https://github.com/hahmadfaiq21/mobile-game/assets/74751720/73868a6e-61a8-43bb-a287-9ae7b1531d45)
 
