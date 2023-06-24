@@ -17,6 +17,3 @@ If you want to solve the puzzle, you can learn from this video below
 https://www.youtube.com/watch?v=NXRIrP1k4dE
 
 How To Solve a 4x4 Sliding Puzzle by Steven Burrell | YouTube
-
-
-NB: Leveling game is under development
