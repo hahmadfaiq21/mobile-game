@@ -8,6 +8,8 @@ A sliding puzzle, sliding block puzzle, or sliding tile puzzle is a combination 
 # User Interface (UI) of Sliding Puzzle 15
 
 ![UI](https://github.com/hahmadfaiq21/mobile-game/assets/74751720/73868a6e-61a8-43bb-a287-9ae7b1531d45)
+
+User Interface (UI) design link: <br>
 https://www.figma.com/design/YtlY7Df2ggByGtDNJPVh1u/Slide-Puzzle?node-id=0-1&m=dev&t=YjPjyeCPAxNxJfve-1
 
 # How To Solve The Puzzle
