@@ -115,7 +115,8 @@
             android:layout_marginHorizontal="80dp"
             style="@style/ButtonStylePrimary"
             android:id="@+id/button_start_game"
-            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_width="320dp"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 

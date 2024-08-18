@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import java.util.Locale
 import java.util.Random
 import java.util.Timer
 import java.util.TimerTask
@@ -103,7 +104,7 @@ class GameActivity : AppCompatActivity() {
             buttons[i / 4][i % 4]?.setBackgroundResource(android.R.drawable.btn_default)
         }
 
-        buttons[emptyX][emptyY]?.text = ""
+        buttons[emptyX][emptyY]?.text = getString(R.string.holder)
         buttons[emptyX][emptyY]?.setBackgroundColor(ContextCompat.getColor(this, R.color.freeButton))
     }
 
@@ -122,7 +123,7 @@ class GameActivity : AppCompatActivity() {
         val hour = timeCount / 3600
         val minute = (timeCount - hour * 3600) / 60
         val tvTime = findViewById<TextView>(R.id.text_view_times)
-        tvTime.text = String.format("%02d:%02d:%02d", hour, minute, second)
+        tvTime.text = String.format(Locale.US,"%02d:%02d:%02d", hour, minute, second)
     }
 
     fun buttonClick(view: View) {
@@ -134,7 +135,7 @@ class GameActivity : AppCompatActivity() {
         if ((kotlin.math.abs(emptyX - x) == 1 && emptyY == y) || (kotlin.math.abs(emptyY - y) == 1 && emptyX == x)) {
             buttons[emptyX][emptyY]?.text = button.text.toString()
             buttons[emptyX][emptyY]?.setBackgroundResource(android.R.drawable.btn_default)
-            button.text = ""
+            button.text = getString(R.string.holder)
             button.setBackgroundColor(ContextCompat.getColor(this, R.color.freeButton))
             emptyX = x
             emptyY = y
@@ -182,7 +183,7 @@ class GameActivity : AppCompatActivity() {
         val second = timeResult % 60
         val hour = timeResult / 3600
         val minute = (timeResult - hour * 3600) / 60
-        textTimeResult.text = String.format("%02d:%02d:%02d", hour, minute, second)
+        textTimeResult.text = String.format(Locale.US,"%02d:%02d:%02d", hour, minute, second)
 
         val buttonYes = dialog.findViewById<Button>(R.id.button_yes)
         val buttonNo = dialog.findViewById<Button>(R.id.button_no)
@@ -226,13 +227,5 @@ class GameActivity : AppCompatActivity() {
         } else {
             preferences.saveBestTime(timeCount)
         }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        setResult(0)
-        val intent = Intent(this@GameActivity, MainActivity::class.java)
-        startActivity(intent)
-        finish()
     }
 }

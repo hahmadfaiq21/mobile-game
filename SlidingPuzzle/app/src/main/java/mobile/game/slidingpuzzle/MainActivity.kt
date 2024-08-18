@@ -9,10 +9,10 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
-    private var requestCode = 0
     private lateinit var preferences: Preferences
 
     private val startGameLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         buttonStartGame.setOnClickListener {
             val intent = Intent(this@MainActivity, GameActivity::class.java)
             startGameLauncher.launch(intent)
-            finish()
         }
 
         val switchDarkMode = findViewById<SwitchCompat>(R.id.switch_dark_mode)
@@ -71,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         val lastSecond = lastTimePref % 60
         val lastHour = lastTimePref / 3600
         val lastMinute = (lastTimePref - lastHour * 3600) / 60
-        textLastTime.text = String.format("%02d:%02d:%02d", lastHour, lastMinute, lastSecond)
+        textLastTime.text = String.format(Locale.US, "%02d:%02d:%02d", lastHour, lastMinute, lastSecond)
 
         val textBestStep = findViewById<TextView>(R.id.text_best_step)
         textBestStep.text = preferences.getBestStep().toString()
@@ -81,15 +80,6 @@ class MainActivity : AppCompatActivity() {
         val bestSecond = bestTimePref % 60
         val bestHour = bestTimePref / 3600
         val bestMinute = (bestTimePref - bestHour * 3600) / 60
-        textBestTime.text = String.format("%02d:%02d:%02d", bestHour, bestMinute, bestSecond)
-    }
-    
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == this.requestCode) {
-            loadData()
-            loadMode()
-        }
+        textBestTime.text = String.format(Locale.US, "%02d:%02d:%02d", bestHour, bestMinute, bestSecond)
     }
 }

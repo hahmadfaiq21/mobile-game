@@ -193,6 +193,7 @@
 
     <LinearLayout
         android:layout_gravity="bottom"
+        android:gravity="center"
         android:layout_margin="50dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -201,8 +202,7 @@
         <Button
             android:id="@+id/button_shuffle"
             android:text="@string/shuffle"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             style="@style/ButtonStylePrimary"/>
     </LinearLayout>

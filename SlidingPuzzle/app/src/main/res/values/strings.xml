@@ -17,6 +17,7 @@
     <string name="puzzle_14">14</string>
     <string name="puzzle_15">15</string>
     <string name="puzzle_16">16</string>
+    <string name="holder"> </string>
     <string name="empty"> . </string>
     <string name="steps_default">0</string>
     <string name="times_default">00:00:00</string>
