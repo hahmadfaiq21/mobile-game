@@ -14,8 +14,6 @@ https://www.figma.com/design/YtlY7Df2ggByGtDNJPVh1u/Slide-Puzzle?node-id=0-1&m=d
 
 # How To Solve The Puzzle
 
-If you want to solve the puzzle, you can learn from this video below
-
+If you want to solve the puzzle, you can learn from this video below: <br>
+How To Solve a 4x4 Sliding Puzzle by Steven Burrell | YouTube <br>
 https://www.youtube.com/watch?v=NXRIrP1k4dE
-
-How To Solve a 4x4 Sliding Puzzle by Steven Burrell | YouTube
