@@ -5,16 +5,15 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import java.util.Locale
-import java.util.Random
 import java.util.Timer
 import java.util.TimerTask
 
@@ -34,198 +33,156 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
         preferences = Preferences(this)
         loadViews()
-        loadNumbers()
-        generateNumbers()
-        loadDataToViews()
+        resetGame()
     }
 
     private fun loadViews() {
         group = findViewById(R.id.puzzle_group)
-        buttons = Array(4) { arrayOfNulls<Button?>(4) }
+        buttons = Array(4) { arrayOfNulls(4) }
+
         for (i in 0 until group.childCount) {
             buttons[i / 4][i % 4] = group.getChildAt(i) as Button?
         }
-        loadTimer()
 
-        val btnShuffle = findViewById<Button>(R.id.button_shuffle)
-        btnShuffle.setOnClickListener {
-            generateNumbers()
-            loadDataToViews()
-            timeCount = 0
-            stepCount = 0
-            val tvSteps = findViewById<TextView>(R.id.text_view_steps)
-            val tvTimes = findViewById<TextView>(R.id.text_view_times)
-            tvSteps.text = resources.getString(R.string.steps_default)
-            tvTimes.text = resources.getString(R.string.times_default)
+        findViewById<Button>(R.id.button_shuffle).setOnClickListener {
+            resetGame()
         }
     }
 
-    private fun loadNumbers() {
-        tiles = IntArray(16)
-        for (i in 0 until group.childCount - 1) {
-            tiles[i] = i + 1
-        }
+    private fun resetGame() {
+        generateNumbers()
+        loadDataToViews()
+        resetCounters()
+        loadTimer()
+    }
+
+    private fun resetCounters() {
+        timeCount = 0
+        stepCount = 0
+        findViewById<TextView>(R.id.text_view_steps).text = getString(R.string.steps_default)
+        findViewById<TextView>(R.id.text_view_times).text = getString(R.string.times_default)
     }
 
     private fun generateNumbers() {
-        var n = 15
-        val random = Random()
-        while (n > 1) {
-            val randomNum = random.nextInt(n--)
-            val temp = tiles[randomNum]
-            tiles[randomNum] = tiles[n]
-            tiles[n] = temp
-        }
-
-        if (!isSolvable())
-            generateNumbers()
+        tiles = (1..15).toList().shuffled().toIntArray()
+        if (!isSolvable()) generateNumbers()
     }
 
     private fun isSolvable(): Boolean {
-        var countInversions = 0
-        for (i in 0 until 15) {
-            for (j in 0 until i) {
-                if (tiles[j] > tiles[i])
-                    countInversions++
-            }
+        val inversions = tiles.withIndex().sumOf { (i, value) ->
+            tiles.take(i).count { it > value }
         }
-        return countInversions % 2 == 0
+        return inversions % 2 == 0
     }
 
     private fun loadDataToViews() {
         emptyX = 3
         emptyY = 3
-
-        for (i in 0 until group.childCount - 1) {
-            buttons[i / 4][i % 4]?.text = tiles[i].toString()
-            buttons[i / 4][i % 4]?.setBackgroundResource(android.R.drawable.btn_default)
+        buttons.flatten().forEachIndexed { index, button ->
+            button?.apply {
+                text = if (index < 15) tiles[index].toString() else getString(R.string.holder)
+                setBackgroundResource(if (index < 15) android.R.drawable.btn_default else R.color.freeButton)
+            }
         }
-
-        buttons[emptyX][emptyY]?.text = getString(R.string.holder)
-        buttons[emptyX][emptyY]?.setBackgroundColor(ContextCompat.getColor(this, R.color.freeButton))
     }
 
     private fun loadTimer() {
-        timer = Timer()
-        timer.schedule(object : TimerTask() {
-            override fun run() {
-                timeCount++
-                setTime(timeCount)
-            }
-        }, 1000, 1000)
+        timer = Timer().apply {
+            schedule(object : TimerTask() {
+                override fun run() {
+                    timeCount++
+                    updateTimerText()
+                }
+            }, 1000, 1000)
+        }
     }
 
-    private fun setTime(timeCount: Int) {
-        val second = timeCount % 60
-        val hour = timeCount / 3600
-        val minute = (timeCount - hour * 3600) / 60
-        val tvTime = findViewById<TextView>(R.id.text_view_times)
-        tvTime.text = String.format(Locale.US,"%02d:%02d:%02d", hour, minute, second)
+    private fun updateTimerText() {
+        val timeFormatted = String.format(
+            Locale.US, "%02d:%02d:%02d",
+            timeCount / 3600, (timeCount % 3600) / 60, timeCount % 60
+        )
+        findViewById<TextView>(R.id.text_view_times).text = timeFormatted
     }
 
     fun buttonClick(view: View) {
-        val button = view as Button
-        val tag = button.tag.toString()
-        val x = tag[0] - '0'
-        val y = tag[1] - '0'
-
-        if ((kotlin.math.abs(emptyX - x) == 1 && emptyY == y) || (kotlin.math.abs(emptyY - y) == 1 && emptyX == x)) {
-            buttons[emptyX][emptyY]?.text = button.text.toString()
-            buttons[emptyX][emptyY]?.setBackgroundResource(android.R.drawable.btn_default)
-            button.text = getString(R.string.holder)
-            button.setBackgroundColor(ContextCompat.getColor(this, R.color.freeButton))
-            emptyX = x
-            emptyY = y
-
+        val (x, y) = (view.tag as String).map { it - '0' }
+        if (canMove(x, y)) {
+            swapTiles(view as Button, x, y)
             stepCount++
-            val tvSteps = findViewById<TextView>(R.id.text_view_steps)
-            tvSteps.text = stepCount.toString()
-
+            findViewById<TextView>(R.id.text_view_steps).text = stepCount.toString()
             checkWin()
         }
     }
 
-    private fun checkWin() {
-        var isWin = false
-        if (emptyX == 3 && emptyY == 3) {
-            for (i in 0 until group.childCount - 1) {
-                if (buttons[i / 4][i % 4]?.text.toString() == (i + 1).toString())
-                    isWin = true
-                else {
-                    isWin = false
-                    break
-                }
-            }
-        }
+    private fun canMove(x: Int, y: Int) =
+        (kotlin.math.abs(emptyX - x) == 1 && emptyY == y) || (kotlin.math.abs(emptyY - y) == 1 && emptyX == x)
 
-        if (isWin) {
+    private fun swapTiles(button: Button, x: Int, y: Int) {
+        buttons[emptyX][emptyY]?.apply {
+            text = button.text
+            setBackgroundResource(android.R.drawable.btn_default)
+        }
+        button.apply {
+            text = getString(R.string.holder)
+            setBackgroundColor(ContextCompat.getColor(this@GameActivity, R.color.freeButton))
+        }
+        emptyX = x
+        emptyY = y
+    }
+
+    private fun checkWin() {
+        if (emptyX == 3 && emptyY == 3 && buttons.flatten().take(15).withIndex()
+                .all { (index, button) ->
+                    button?.text == (index + 1).toString()
+                }
+        ) {
             timer.cancel()
             saveData()
-            val stepResult = stepCount.toString()
-            val timeResult = timeCount
-            showCustomDialog(stepResult, timeResult)
+            showCustomDialog()
         }
     }
 
-    private fun showCustomDialog(stepResult: String, timeResult: Int) {
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.custom_dialog)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.setCancelable(false)
+    private fun showCustomDialog() {
+        Dialog(this).apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            setContentView(R.layout.custom_dialog)
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setCancelable(false)
 
-        val textStepResult = dialog.findViewById<TextView>(R.id.text_step_result)
-        val textTimeResult = dialog.findViewById<TextView>(R.id.text_time_result)
-        textStepResult.text = stepResult
-        val second = timeResult % 60
-        val hour = timeResult / 3600
-        val minute = (timeResult - hour * 3600) / 60
-        textTimeResult.text = String.format(Locale.US,"%02d:%02d:%02d", hour, minute, second)
+            val stepResult = stepCount.toString()
+            val timeFormatted = String.format(
+                Locale.US, "%02d:%02d:%02d",
+                timeCount / 3600, (timeCount % 3600) / 60, timeCount % 60
+            )
 
-        val buttonYes = dialog.findViewById<Button>(R.id.button_yes)
-        val buttonNo = dialog.findViewById<Button>(R.id.button_no)
+            findViewById<TextView>(R.id.text_step_result).text = stepResult
+            findViewById<TextView>(R.id.text_time_result).text = timeFormatted
 
-        buttonYes.setOnClickListener {
-            generateNumbers()
-            loadDataToViews()
-            timeCount = 0
-            stepCount = 0
-            val tvSteps = findViewById<TextView>(R.id.text_view_steps)
-            val tvTimes = findViewById<TextView>(R.id.text_view_times)
-            tvSteps.text = resources.getString(R.string.steps_default)
-            tvTimes.text = resources.getString(R.string.times_default)
-            loadTimer()
-            dialog.cancel()
+            findViewById<Button>(R.id.button_yes).setOnClickListener {
+                resetGame()
+                cancel()
+            }
+
+            findViewById<Button>(R.id.button_no).setOnClickListener {
+                startActivity(Intent(this@GameActivity, MainActivity::class.java))
+                finish()
+            }
+
+            show()
         }
-
-        buttonNo.setOnClickListener {
-            val intent = Intent(this@GameActivity, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-        dialog.show()
     }
 
     private fun saveData() {
-        preferences = Preferences(this@GameActivity)
-        preferences.saveLastStep(stepCount)
-        preferences.saveLastTime(timeCount)
+        preferences.apply {
+            saveLastStep(stepCount)
+            saveLastTime(timeCount)
 
-        if(preferences.getBestStep() != 0) {
-            if (preferences.getBestStep() > stepCount)
-                preferences.saveBestStep(stepCount)
-        } else {
-            preferences.saveBestStep(stepCount)
-        }
-
-        if(preferences.getBestTime() != 0) {
-            if (preferences.getBestTime() > timeCount)
-                preferences.saveBestTime(timeCount)
-        } else {
-            preferences.saveBestTime(timeCount)
+            if (getBestStep() == 0 || getBestStep() > stepCount) saveBestStep(stepCount)
+            if (getBestTime() == 0 || getBestTime() > timeCount) saveBestTime(timeCount)
         }
     }
 }

@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 
 class Preferences(context: Context) {
-    private val preferences: SharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
+    private val preferences: SharedPreferences =
+        context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
     private val editor: SharedPreferences.Editor = preferences.edit()
 
     fun saveMode(mode: Boolean) {
