@@ -1,4 +1,4 @@
-# Sliding Puzzle 15 App
+# SlidingPuzzle15 App
 
 <p align="center">
 <img src="https://github.com/hahmadfaiq21/mobile-game/assets/74751720/bb570398-5f12-40fd-9b5a-7f837eb56988">
